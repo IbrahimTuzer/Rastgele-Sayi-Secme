@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .random-number {
+      color: red;
+      font-weight: bold;
+    }
+
+    #numberContainer {
+      font-size: 20px; /* Daha büyük yazı boyutu */
+      line-height: 1.5; /* Daha geniş satır aralığı */
+    }
+  </style>
+</head>
+<body>
+  <button id="sortButton" onclick="sortNumbers()">Sırala</button>
+  <button id="randomButton" onclick="selectRandomNumber()" disabled>Rastgele Sayı Seç</button>
+  <div id="numberContainer"></div>
+
+  <script>
+    let selectedNumbers = [];
+
+    function generateNumbers() {
+      let numbers = [];
+      for (let i = 1; i <= 99; i++) {
+        numbers.push(i);
+      }
+      return numbers;
+    }
+
+    function displayNumbers(numbers) {
+      const numberContainer = document.getElementById("numberContainer");
+      numberContainer.innerHTML = "";
+
+      for (let i = 0; i < numbers.length; i++) {
+        const span = document.createElement("span");
+        span.innerText = numbers[i];
+        span.dataset.number = numbers[i]; // Set a custom attribute to associate the number
+        numberContainer.appendChild(span);
+
+        if ((i + 1) % 10 === 0) {
+          numberContainer.appendChild(document.createElement("br"));
+        } else {
+          numberContainer.appendChild(document.createTextNode(" ")); // Boşluk ekle
+        }
+      }
+    }
+
+    function sortNumbers() {
+      const numbers = generateNumbers().sort((a, b) => a - b);
+      displayNumbers(numbers);
+
+      selectedNumbers = [];
+      document.getElementById("randomButton").disabled = false;
+    }
+
+    function selectRandomNumber() {
+      const randomNumber = Math.floor(Math.random() * 99) + 1;
+
+      // Remove styling from the previously selected numbers
+      for (const num of selectedNumbers) {
+        const prevNumberSpan = document.querySelector(`#numberContainer span[data-number="${num}"]`);
+        prevNumberSpan.classList.remove("random-number");
+      }
+
+      // Apply styling to the current random number
+      const newNumberSpan = document.querySelector(`#numberContainer span[data-number="${randomNumber}"]`);
+      newNumberSpan.classList.add("random-number");
+
+      // Store the selected number for tracking
+      selectedNumbers.push(randomNumber);
+
+      document.getElementById("randomButton").disabled = false;
+    }
+  </script>
+</body>
+</html>
